@@ -18,69 +18,6 @@ private:
     vector<int> b_matrix_h = {}; // Black matrix of knight
     vector<int> w_matrix_h = {}; // White matrix of knight
 
-public:
-
-    // Accessing the private elements
-    float Get_score(char color)
-    {
-        if (color=='s')
-        {
-            return black_score;
-        }
-        else (color = 'b');
-        {
-            return white_score;
-        }
-    }
-
-    // Setting the elements of the black and white matrices to zero
-    void Set_to_zero()
-        {
-            for (int i = 0; i < 8; ++i)
-                {
-                    for (int j = 0; j < 8; ++j)
-                        {
-                        black_matrix[i][j] = 0.0;
-                        white_matrix[i][j] = 0.0;
-                        }
-                }
-        }
-
-    // placing chess pieces on a chessboard matrix
-    void Place_pieces(unsigned int row, unsigned int column, string name)
-    {
-        if (name[1] == 's')
-            {
-                if (name[0] == 'a')
-                {
-                    // It's written to distinguish between the knight and bishop
-                    vector<int> b_horse_loc = {static_cast<int>(row), static_cast<int>(Column_map(column))}; // Saving current black knight location data into a vector
-                    b_matrix_h.insert(b_matrix_h.end(), b_horse_loc.begin(), b_horse_loc.end()); // Concatenate
-
-                    black_matrix[row][Column_map(column)] = Piece_map(name[0]);
-                }
-                else
-                {
-                    black_matrix[row][Column_map(column)] = Piece_map(name[0]);
-                }
-            }
-        else if(name[1] == 'b')
-            {
-                if (name[0] == 'a')
-                {
-                    // It's written to distinguish between the knight and bishop
-                    vector<int> w_horse_loc = {static_cast<int>(row), static_cast<int>(Column_map(column))}; // Saving current white knight location data into a vector
-                    w_matrix_h.insert(w_matrix_h.end(), w_horse_loc.begin(), w_horse_loc.end()); // Concatenate
-
-                    white_matrix[row][Column_map(column)] = Piece_map(name[0]);
-                }
-                else
-                {
-                    white_matrix[row][Column_map(column)] = Piece_map(name[0]);
-                }
-            }
-    }
-
     // Determining the column position data and identified the chess piece present in that column by using mapping.
     int Column_map(unsigned column) // Mapping column positions
     {
@@ -96,7 +33,8 @@ public:
         return mapping[column];
     }
 
-    int Piece_map(char name) // Mapping the chess pieces
+    // Mapping the chess pieces
+    int Piece_map(char name)
     {
         map<char, int> mapping_piece;
         mapping_piece['p'] = 1.0;
@@ -151,67 +89,6 @@ public:
             {
                 // Empty
                 return eleman;
-            }
-    }
-
-    // Calculating total points of each color
-    void Calc_points()
-        {
-            for (int i = 0; i < 8; i++)
-                {
-                    for (int j = 0; j <8; j++)
-                    {
-                        if (black_matrix[i][j] < 101.0)
-                        {
-                            black_score += black_matrix[i][j];
-                        }
-                        if (white_matrix[i][j] < 101.0)
-                        {
-                            white_score += white_matrix[i][j];
-                        }
-                    }
-                }
-        cout<< "Black point: " <<black_score <<endl;
-        cout <<"White point: " <<white_score<<endl;
-        }
-
-    // Threat situations were calculated.
-    void point_calculator(int i,int j,char color)
-    {
-
-        if (getMatrix(i,j,color)==5.0f) // Analyzing  the castle's movements.
-            {
-                Castle_movements(i,j,color);
-            }
-
-        if (getMatrix(i,j,color)==3.0f) // Analyzing  the bishop's movements or knight's movements
-            {
-                char which_one = knight_or_bishop(i,j,color);
-                if (which_one == 'a') // This is a knight
-                {
-                    Knight_movements(i,j,color); // Analyzing  the bishop's movements
-                }
-                else
-                {
-                    Bishop_movement(i,j,color); // Analyzing  the knight's movements
-                }
-            }
-
-        if (getMatrix(i,j,color)==1.0f) // This is pawn
-            {
-                Pawn_movement(i,j,color); // Analyzing  the pawn.
-            }
-
-        if (getMatrix(i,j,color)==9.0f) // This is queen.
-            {
-                Bishop_movement(i,j,color); // Analyzing  the bishop's movements
-                Castle_movements(i,j,color); // Analyzing  the knight's movements
-            }
-        if (getMatrix(i,j,color)==100.0f) // This is king.
-            {
-                // No need to do something.
-                // I am aware that the king can also pose a threat.
-                // However, I did not consider it in this case to avoid complicating the code.
             }
     }
 
@@ -584,7 +461,7 @@ public:
         }
     }
 
-   void Castle_movements(int i,int j,char color)
+    void Castle_movements(int i,int j,char color)
     {
     int counter = 1;
     char Oppo_color = getOppositeColor(color);
@@ -706,6 +583,130 @@ public:
             return 's';
             }
     }
+
+public:
+    // Setting the elements of the black and white matrices to zero
+    void Set_to_zero()
+        {
+            for (int i = 0; i < 8; ++i)
+                {
+                    for (int j = 0; j < 8; ++j)
+                        {
+                        black_matrix[i][j] = 0.0;
+                        white_matrix[i][j] = 0.0;
+                        }
+                }
+        }
+
+    // Accessing the private elements
+    float Get_score(char color)
+    {
+        if (color=='s')
+        {
+            return black_score;
+        }
+        else (color = 'b');
+        {
+            return white_score;
+        }
+    }
+
+    // placing chess pieces on a chessboard matrix
+    void Place_pieces(unsigned int row, unsigned int column, string name)
+    {
+        if (name[1] == 's')
+            {
+                if (name[0] == 'a')
+                {
+                    // It's written to distinguish between the knight and bishop
+                    vector<int> b_horse_loc = {static_cast<int>(row), static_cast<int>(Column_map(column))}; // Saving current black knight location data into a vector
+                    b_matrix_h.insert(b_matrix_h.end(), b_horse_loc.begin(), b_horse_loc.end()); // Concatenate
+
+                    black_matrix[row][Column_map(column)] = Piece_map(name[0]);
+                }
+                else
+                {
+                    black_matrix[row][Column_map(column)] = Piece_map(name[0]);
+                }
+            }
+        else if(name[1] == 'b')
+            {
+                if (name[0] == 'a')
+                {
+                    // It's written to distinguish between the knight and bishop
+                    vector<int> w_horse_loc = {static_cast<int>(row), static_cast<int>(Column_map(column))}; // Saving current white knight location data into a vector
+                    w_matrix_h.insert(w_matrix_h.end(), w_horse_loc.begin(), w_horse_loc.end()); // Concatenate
+
+                    white_matrix[row][Column_map(column)] = Piece_map(name[0]);
+                }
+                else
+                {
+                    white_matrix[row][Column_map(column)] = Piece_map(name[0]);
+                }
+            }
+    }
+
+    // Calculating total points of each color
+    void Calc_points()
+        {
+            for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j <8; j++)
+                    {
+                        if (black_matrix[i][j] < 101.0)
+                        {
+                            black_score += black_matrix[i][j];
+                        }
+                        if (white_matrix[i][j] < 101.0)
+                        {
+                            white_score += white_matrix[i][j];
+                        }
+                    }
+                }
+        cout<< "Black point: " <<black_score <<endl;
+        cout <<"White point: " <<white_score<<endl;
+        }
+
+    // Threat situations were calculated.
+    void point_calculator(int i,int j,char color)
+    {
+
+        if (getMatrix(i,j,color)==5.0f) // Analyzing  the castle's movements.
+            {
+                Castle_movements(i,j,color);
+            }
+
+        if (getMatrix(i,j,color)==3.0f) // Analyzing  the bishop's movements or knight's movements
+            {
+                char which_one = knight_or_bishop(i,j,color);
+                if (which_one == 'a') // This is a knight
+                {
+                    Knight_movements(i,j,color); // Analyzing  the bishop's movements
+                }
+                else
+                {
+                    Bishop_movement(i,j,color); // Analyzing  the knight's movements
+                }
+            }
+
+        if (getMatrix(i,j,color)==1.0f) // This is pawn
+            {
+                Pawn_movement(i,j,color); // Analyzing  the pawn.
+            }
+
+        if (getMatrix(i,j,color)==9.0f) // This is queen.
+            {
+                Bishop_movement(i,j,color); // Analyzing  the bishop's movements
+                Castle_movements(i,j,color); // Analyzing  the knight's movements
+            }
+        if (getMatrix(i,j,color)==100.0f) // This is king.
+            {
+                // No need to do something.
+                // I am aware that the king can also pose a threat.
+                // However, I did not consider it in this case to avoid complicating the code.
+            }
+    }
+
 };
 
 
@@ -770,6 +771,3 @@ cout << "Beyaz puan: " << object.Get_score('b')<<endl;
 
 return 0;
 }
-
-
-
